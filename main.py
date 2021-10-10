@@ -76,7 +76,8 @@ def ussd_callback():
         elif text == '142':
             return menu.unavailable(_id)
         elif text == '143':
-            return menu.unavailable(_id)            
+            return menu.unavailable(_id)
+# ===========================================
         else:
             return 'simple response'
 
