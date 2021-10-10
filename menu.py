@@ -59,7 +59,7 @@ class Menu():
 
     def unavailable(self, _id):
         menu_text = "Service Unavailable"
-        return self.session.ussd_proceed(menu_text)
+        return self.session.ussd_proceed(menu_text, _id, '14')
 
 
     # # string matching
