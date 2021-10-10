@@ -47,7 +47,7 @@ class Menu():
         menu_text = "Make Payment\n"
         menu_text += "1. Pay Bill\n"
         menu_text += "2. Buy goods\n"
-        menu_text += "2. School Payment\n"
+        menu_text += "3. School Payment\n"
         return self.session.ussd_proceed(menu_text, _id, '13')
 
     def my_bank(self, _id):
@@ -57,11 +57,9 @@ class Menu():
         menu_text += "2. Change and reset pin\n"
         return self.session.ussd_proceed(menu_text, _id, '14')
 
-
-
-    # check if session_id is new and user not stored.
-        # if true
-        # else
+    def unavailable(self, _id):
+        menu_text = "Service Unavailable"
+        return self.session.ussd_proceed(menu_text)
 
 
     # # string matching

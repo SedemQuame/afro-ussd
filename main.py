@@ -37,12 +37,46 @@ def ussd_callback():
             return menu.home(_id)
         elif text == '11':
             return menu.transfer(_id)
+# ===========================================
+        elif text == '111':
+            return menu.unavailable(_id)
+        elif text == '112':
+            return menu.unavailable(_id)
+        elif text == '113':
+            return menu.unavailable(_id)
+        elif text == '114':
+            return menu.unavailable(_id)
+        elif text == '115':
+            return menu.unavailable(_id)
+        elif text == '116':
+            return menu.unavailable(_id)
+        elif text == '117':
+            return menu.unavailable(_id)
+# ===========================================
         elif text == '12':
             return menu.withdrawal(_id)
+        elif text == '121':
+            return menu.unavailable(_id)
+        elif text == '122':
+            return menu.unavailable(_id)            
+# ===========================================
         elif text == '13':
             return menu.payment(_id)
+        elif text == '131':
+            return menu.unavailable(_id)
+        elif text == '132':
+            return menu.unavailable(_id)
+        elif text == '133':
+            return menu.unavailable(_id)
+# ===========================================
         elif text == '14':
             return menu.my_bank(_id)
+        elif text == '141':
+            return menu.unavailable(_id)
+        elif text == '142':
+            return menu.unavailable(_id)
+        elif text == '143':
+            return menu.unavailable(_id)            
         else:
             return 'simple response'
 
