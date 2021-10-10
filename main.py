@@ -35,13 +35,13 @@ def ussd_callback():
     else:
         if text == '1':
             return menu.home(_id)
-        elif text == '1*1':
+        elif text == '11':
             return menu.transfer(_id)
-        elif text == '1*2':
+        elif text == '12':
             return menu.withdrawal(_id)
-        elif text == '1*3':
+        elif text == '13':
             return menu.payment(_id)
-        elif text == '1*4':
+        elif text == '14':
             return menu.my_bank(_id)
         else:
             return 'simple response'
