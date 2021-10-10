@@ -33,15 +33,15 @@ def ussd_callback():
         session.save(_id, '00')
         return menu.registration(phone_number)
     else:
-        if session.read_value(_id) == '1':
+        if text == '1':
             return menu.home(_id)
-        elif session.read_value(_id) == '11':
+        elif text == '1*1':
             return menu.transfer(_id)
-        elif session.read_value(_id) == '12':
+        elif text == '1*2':
             return menu.withdrawal(_id)
-        elif session.read_value(_id) == '13':
+        elif text == '1*3':
             return menu.payment(_id)
-        elif session.read_value(_id) == '14':
+        elif text == '1*4':
             return menu.my_bank(_id)
         else:
             return 'simple response'
