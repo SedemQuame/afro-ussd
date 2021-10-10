@@ -30,53 +30,54 @@ def ussd_callback():
 
     # check if the session id has already been saved
     if not session.checker(_id):
-        session.save(_id, '00')
-        return menu.registration(phone_number)
+        session.save(_id)
+        return menu.registration()
     else:
         if text == '1':
             return menu.home(_id)
-        elif text == '11':
+        elif text == '1*1':
             return menu.transfer(_id)
 # ===========================================
-        elif text == '111':
+        elif text == '1*1*1':
             return menu.unavailable(_id)
-        elif text == '112':
+        elif text == '1*1*2':
             return menu.unavailable(_id)
-        elif text == '113':
+        elif text == '1*1*3':
             return menu.unavailable(_id)
-        elif text == '114':
+        elif text == '1*1*4':
             return menu.unavailable(_id)
-        elif text == '115':
+        elif text == '1*1*5':
             return menu.unavailable(_id)
-        elif text == '116':
+        elif text == '1*1*6':
             return menu.unavailable(_id)
-        elif text == '117':
+        elif text == '1*1*7':
             return menu.unavailable(_id)
 # ===========================================
-        elif text == '12':
+        elif text == '1*2':
             return menu.withdrawal(_id)
-        elif text == '121':
-            return menu.unavailable(_id)
-        elif text == '122':
+        elif text == '1*2*1':
+            return menu.unavailable(_id)*
+        elif text == '1*2*2':
             return menu.unavailable(_id)            
 # ===========================================
-        elif text == '13':
+        elif text == '1*3':
             return menu.payment(_id)
-        elif text == '131':
+        elif text == '1*3*1':
             return menu.unavailable(_id)
-        elif text == '132':
+        elif text == '1*3*2':
             return menu.unavailable(_id)
-        elif text == '133':
+        elif text == '1*3*3':
             return menu.unavailable(_id)
 # ===========================================
-        elif text == '14':
+        elif text == '1*4':
             return menu.my_bank(_id)
-        elif text == '141':
+        elif text == '1*4*1':
             return menu.unavailable(_id)
-        elif text == '142':
+        elif text == '1*4*2':
             return menu.unavailable(_id)
-        elif text == '143':
-            return menu.unavailable(_id)            
+        elif text == '1*4*3':
+            return menu.unavailable(_id)
+# ===========================================
         else:
             return 'simple response'
 
