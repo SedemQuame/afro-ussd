@@ -56,7 +56,7 @@ def ussd_callback():
         elif text == '1*2':
             return menu.withdrawal(_id)
         elif text == '1*2*1':
-            return menu.unavailable(_id)*
+            return menu.unavailable(_id)
         elif text == '1*2*2':
             return menu.unavailable(_id)            
 # ===========================================
