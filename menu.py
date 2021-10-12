@@ -13,7 +13,8 @@ class Menu():
     def registration(self):
         menu_text = 'Service Registration \n'
         menu_text += 'You are not registered for this service. \n'
-        menu_text += 'To register, please enter your name & email. \n'
+        menu_text += '1. Create an account \n'
+        menu_text += '2. Exit \n'
         return self.session.ussd_proceed(menu_text, '0')
 
     def home(self, _id):

@@ -28,58 +28,60 @@ def ussd_callback():
     print("Service code", service_code)
     print("Text", text)
 
-    # check if the session id has already been saved
-    if not session.checker(_id):
-        session.save(_id)
-        return menu.registration()
+    # # check if the session id has already been saved
+    # if not session.checker(_id):
+    #     session.save(_id)
+    #     return menu.registration()
+    # else:
+    if text == 'registration':
+        return menu.home(_id)    
+    elif text == '1':
+        return menu.home(_id)
+    elif text == '1*1':
+        return menu.transfer(_id)
+# ===========================================
+    elif text == '1*1*1':
+        return menu.unavailable(_id)
+    elif text == '1*1*2':
+        return menu.unavailable(_id)
+    elif text == '1*1*3':
+        return menu.unavailable(_id)
+    elif text == '1*1*4':
+        return menu.unavailable(_id)
+    elif text == '1*1*5':
+        return menu.unavailable(_id)
+    elif text == '1*1*6':
+        return menu.unavailable(_id)
+    elif text == '1*1*7':
+        return menu.unavailable(_id)
+# ===========================================
+    elif text == '1*2':
+        return menu.withdrawal(_id)
+    elif text == '1*2*1':
+        return menu.unavailable(_id)
+    elif text == '1*2*2':
+        return menu.unavailable(_id)            
+# ===========================================
+    elif text == '1*3':
+        return menu.payment(_id)
+    elif text == '1*3*1':
+        return menu.unavailable(_id)
+    elif text == '1*3*2':
+        return menu.unavailable(_id)
+    elif text == '1*3*3':
+        return menu.unavailable(_id)
+# ===========================================
+    elif text == '1*4':
+        return menu.my_bank(_id)
+    elif text == '1*4*1':
+        return menu.unavailable(_id)
+    elif text == '1*4*2':
+        return menu.unavailable(_id)
+    elif text == '1*4*3':
+        return menu.unavailable(_id)
+# ===========================================
     else:
-        if text == '1':
-            return menu.home(_id)
-        elif text == '1*1':
-            return menu.transfer(_id)
-# ===========================================
-        elif text == '1*1*1':
-            return menu.unavailable(_id)
-        elif text == '1*1*2':
-            return menu.unavailable(_id)
-        elif text == '1*1*3':
-            return menu.unavailable(_id)
-        elif text == '1*1*4':
-            return menu.unavailable(_id)
-        elif text == '1*1*5':
-            return menu.unavailable(_id)
-        elif text == '1*1*6':
-            return menu.unavailable(_id)
-        elif text == '1*1*7':
-            return menu.unavailable(_id)
-# ===========================================
-        elif text == '1*2':
-            return menu.withdrawal(_id)
-        elif text == '1*2*1':
-            return menu.unavailable(_id)
-        elif text == '1*2*2':
-            return menu.unavailable(_id)            
-# ===========================================
-        elif text == '1*3':
-            return menu.payment(_id)
-        elif text == '1*3*1':
-            return menu.unavailable(_id)
-        elif text == '1*3*2':
-            return menu.unavailable(_id)
-        elif text == '1*3*3':
-            return menu.unavailable(_id)
-# ===========================================
-        elif text == '1*4':
-            return menu.my_bank(_id)
-        elif text == '1*4*1':
-            return menu.unavailable(_id)
-        elif text == '1*4*2':
-            return menu.unavailable(_id)
-        elif text == '1*4*3':
-            return menu.unavailable(_id)
-# ===========================================
-        else:
-            return 'simple response'
+        return 'simple response'
 
 # creating application port.
 if __name__ == '__main__':
