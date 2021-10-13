@@ -54,11 +54,27 @@ class Menu():
         menu_text = "My Bank\n"
         menu_text += "1. Check Balance\n"
         menu_text += "2. Account Statement\n"
-        menu_text += "2. Change and reset pin\n"
+        menu_text += "3. Change and reset pin\n"
+        menu_text += "4. Register Account\n"
         return self.session.ussd_proceed(menu_text, _id, '14')
+
+    def register_account_name(self, _id):
+        menu_text = "Register Bank Account\n"
+        menu_text += "1. Enter your name.\n"
+        #  pass name to the db function to update model with user name
+
+        return self.session.ussd_proceed(menu_text, _id, '44')
+
+    def register_account_pin(self, _id):
+        menu_text = "Register Bank Account\n"
+        menu_text += "1. Enter your 6 character PIN.\n"
+        #  pass name to the db function to update model with user name
+        #         
+        return self.session.ussd_proceed(menu_text, _id, '44')
 
     def unavailable(self, _id):
         menu_text = "Service Unavailable"
-        return self.session.ussd_proceed(menu_text, _id, '14')
+        return self.session.ussd_end(menu_text)
 
 # *384*26678#
+# *384*566645#
