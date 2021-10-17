@@ -67,7 +67,7 @@ class Menu():
 
     def register_account_pin(self, _id):
         menu_text = "Register Bank Account\n"
-        menu_text += "1. Enter your 6 character PIN.\n"
+        menu_text += "1. Enter your name.\n"
         #  pass name to the db function to update model with user name
         #         
         return self.session.ussd_proceed(menu_text, _id, '44')
