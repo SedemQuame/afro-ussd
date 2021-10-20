@@ -7,9 +7,8 @@ from util import generate_random_acc, choose_random_bank_branch
 from session_manager import SessionManager
 from menu import Menu
 
-file_path = os.path.abspath(os.getcwd())+"\accounts.sqlite3"
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///accounts.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///accounts.sqlite3'
 app.config['SECRET_KEY'] = "random string"
 
 db = SQLAlchemy(app)
@@ -24,7 +23,7 @@ class accounts(db.Model):
    bank_branch = db.Column(db.String(50)) # program generated
    name = db.Column(db.String(50)) # user input
    pin = db.Column(db.String(6)) # user input
-   phone = db.Column(db.String(15)) # user input
+   phone = db.Column(db.String(15)) # user input or from ussd_session
    balance = db.Column(db.String(200)) # default 0, user input (teller)
    retry_chances = db.Column(db.Integer) # default 3
    creation_date = db.Column(db.String(10)) # progam generated
@@ -75,12 +74,16 @@ def delete():
 def show_all():
    return render_template('show_all.html', accounts = accounts.query.all() )
 
+# @app.route('/transaction_history')
+# def user_transaction_history():
+#    return render_template('history.html', tranactions = transactions.query.all() )
+
 @app.route('/ussd/callback', methods=['POST', 'GET'])
 def ussd_callback():
     global response
     _id = request.values.get("sessionId", None)
     service_code = request.values.get("serviceCode", None)
-    phone_number = request.values.get("phoneNumber", None)
+    phoneNumber = request.values.get("phoneNumber", None)
     text = request.values.get("text", '')
 
     if text == '':
@@ -125,12 +128,31 @@ def ussd_callback():
         return menu.unavailable(_id)
     elif text == '4*4':
         return menu.register_account_name(_id)
-    elif text == '4*4*1':
-        return menu.register_account_pin(_id)
+    elif '4*4*1' in text:
+        user_accounts = accounts.query.filter_by(phone_number=phoneNumber)
+        phase_str = ''
+        if user_accounts != None:
+            return 'END Unknown User Input.'
+        elif text == '4*4*1':
+            phase_str = "Enter your name.\n"
+            return menu.register_account(_id, phase_str)
+        elif len(text.split('*')) == 4:
+            user_name = text.split('*')[-1] # get name string
+            user_accounts.update(dict(name=user_name)) # place name string in database by id
+            db.session.commit() # commit db change
+            phase_str = "Enter you 6 character PIN.\n"
+            return menu.register_account(_id, phase_str)
+        if len(text.split('*')) == 5:
+            user_pin = text.split('*')[-1] # get pin string
+            user_accounts.update(dict(pin=user_pin)) # place pin string in database by id
+            db.session.commit() # commit db change
+            phase_str = "Thank you for registering to this service."
+            return session.ussd_end(phase_str)
     else:
-        return 'END Unknown User Input.'
+        return 
 
 # creating application port.
 if __name__ == '__main__':
     # run application on localhost, using port stored as PORT in env variables.
+    db.create_all()
     app.run(host="0.0.0.0", port=os.environ.get('PORT'))

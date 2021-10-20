@@ -58,9 +58,9 @@ class Menu():
         menu_text += "4. Register Account\n"
         return self.session.ussd_proceed(menu_text, _id, '14')
 
-    def register_account_name(self, _id):
+    def register_account(self, _id, phase_str):
         menu_text = "Register Bank Account\n"
-        menu_text += "1. Enter your name.\n"
+        menu_text += phase_str
         #  pass name to the db function to update model with user name
 
         return self.session.ussd_proceed(menu_text, _id, '44')
