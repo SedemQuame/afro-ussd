@@ -56,3 +56,9 @@ class SessionManager:
         response = make_response(menu_text, 200)
         response.headers['Content-Type'] = "text/plain"
         return response
+
+    def save_session_dict(self, key, dict):
+        return self.r.set(key, dict)
+
+    def get_session_dict(self, key):
+        return self.r.get(key)

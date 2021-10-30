@@ -43,9 +43,10 @@
                     <th>Account</th>
                     <th>Name</th>
                     <th>Phone</th>
+                    <th>Retry Chances</th>
                     <th>Balance</th>
                     <th>Pin</th>
-                    <!-- <th>R. Chances</th> -->
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -56,11 +57,17 @@
                     <td>{{ account.account_number }}</td>
                     <td>{{ account.name }}</td>
                     <td>{{ account.phone }}</td>
+                    <td>{{ account.retry_chances }}</td>
                     <td>GHS {{ account.balance }}.00</td>
                     <td> ****** </td> 
                     <!-- {{ account.pin }} -->
-                    <!-- <td>{{ account.retry_chances }}</td> -->
                     <!-- <td>{{ account.creation_date }}</td> -->
+                    <td>
+                        <form action="/restore" method="post">
+                            <input type="hidden" name="id" value="{{account.id}}">
+                            <input class="btn btn-dark" type="submit" value="Restore">
+                        </form>
+                    </td>
                     <td>
                         <form action="/delete" method="post">
                             <input type="hidden" name="id" value="{{account.id}}">
