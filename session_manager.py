@@ -24,6 +24,12 @@ class SessionManager:
         # returns true if successful.
         self.id_list.append(id)
         return self.r.set(id, current_form)
+
+    def set_and_expire_keys(self, id, random_otp):
+        id_otp = f"{id}_otp"
+        self.r.set(id_otp, random_otp)
+        # otp expires after, 2mins
+        self.r.expire(id_otp, 120)
     
     def update_id_key(self, id, response):
         # responds saves the user's menu navigation.

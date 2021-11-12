@@ -35,18 +35,41 @@
 
         <form action="{{ request.path }}" method="post">
             <div class="mb-3">
+                <label for="bank" class="form-label">Bank</label>
+                <!-- <input id="bank" class="form-control" type="text" name="bank" placeholder="Name"/> -->
+                <select id="bank">
+                    <option value="UBA">UBA</option>
+                    <option value="CalBank">CalBank</option>
+                    <option value="EcoBank">EcoBank</option>
+                    <option value="Stanbic">Stanbic</option>
+                    <option value="ADB">ADB</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="bank_branch" class="form-label">Bank Branch</label>
+                <!-- <input id="bank_branch" class="form-control" type="text" name="bank_branch" placeholder="Bank Branch"/> -->
+                <select id="Branch">
+                    <option value="Madina">Madina</option>
+                    <option value="Kasoa">Kasoa</option>
+                    <option value="Legon">Legon</option>
+                    <option value="Dodowa">Dodowa</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
                 <input id="name" class="form-control" type="text" name="name" placeholder="Name"/>
             </div>
-
-            <div class="mb-3">
-                <label for="PIN" class="form-label">Account P.I.N</label>
-                <input id="PIN" class="form-control" type="text" name="pin" placeholder="Pin"/>
-            </div>
-
+            
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone Number</label>
                 <input id="phone" class="form-control" type="text" name="phone" placeholder="Phone Number"/>
+            </div>
+            
+            <div class="mb-3">
+                <label for="PIN" class="form-label">Account P.I.N</label>
+                <input id="PIN" class="form-control" type="text" name="pin" placeholder="Pin"/>
             </div>
 
             <div class="mb-3">

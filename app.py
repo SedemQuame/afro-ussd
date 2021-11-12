@@ -1,8 +1,6 @@
 import os
 from flask import Flask, make_response, request, flash, url_for, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
-
-import pprint
 from util import generate_random_acc, choose_random_bank_branch
 from session_manager import SessionManager
 from menu import Menu
@@ -12,10 +10,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///accounts.sqlite3'
 app.config['SECRET_KEY'] = "random string"
 
 db = SQLAlchemy(app)
-
-response = ""
 session = SessionManager()
 menu = Menu(session)
+response = ""
 
 class Accounts(db.Model):
    id = db.Column('account_id', db.Integer, primary_key = True)
@@ -24,6 +21,7 @@ class Accounts(db.Model):
    name = db.Column(db.String(50)) # user input
    pin = db.Column(db.String(6)) # user input
    phone = db.Column(db.String(15)) # user input or from ussd_session
+   email = db.Column(db.String(100))  # user input
    balance = db.Column(db.String(200)) # default 0, user input (teller)
    retry_chances = db.Column(db.Integer) # default 3
    creation_date = db.Column(db.String(10)) # progam generated
@@ -52,6 +50,7 @@ def index():
     response.headers['Content-Type'] = "text/plain"
     return response
 
+
 def sanitize(phone_number):
     if '233' in phone_number:
         if phone_number.index('233') == 0 or phone_number.index('+233') == 0:
@@ -61,7 +60,7 @@ def sanitize(phone_number):
 @app.route('/new', methods = ['GET', 'POST'])
 def new():
    if request.method == 'POST':
-      if not request.form['name'] or not request.form['phone'] or not request.form['balance'] or not request.form['pin']:
+      if not request.form['name'] or not request.form['phone'] or not request.form['balance'] or not request.form['pin'] or not request.form['']:
          flash('Please enter all the fields', 'error')
       else:
          default_pin_retry_chances = 3
@@ -96,21 +95,15 @@ def restore_account_chances ():
             db.session.commit()
             return redirect(url_for('show_all'))
 
-# @app.route('/transaction_history')
-# def user_transaction_history():
-#    return render_template('history.html', tranactions = transactions.query.all() )
-
-
 @app.route('/ussd/callback', methods=['POST', 'GET'])
 def ussd_callback():
     global response
     _id = request.values.get("sessionId", None)
-    # service_code = request.values.get("serviceCode", None)
+    service_code = request.values.get("serviceCode", None)
     phoneNumber = sanitize(request.values.get("phoneNumber", None))
     text = request.values.get("text", '')
 
-
-    print('sanitized number' + phoneNumber)
+    print(text)
     if text == '':
         return menu.home(_id)
     elif text == '1':
@@ -118,23 +111,21 @@ def ussd_callback():
     elif '1*' in text:
         return menu.transfer_money_sequence(text, _id, Accounts, db, phoneNumber)
     # ----------------------------------------
-    elif text == '2':
-        return menu.withdrawal(_id)
-    elif '2*' in text:
-        return menu.withdrawal_sequence(text, _id)      
+    elif text == '2' or '2*' in text:
+        return menu.withdrawal_sequence(text, _id, Accounts, db, phoneNumber)      
     # ----------------------------------------   
-    elif text == '3':
-        return menu.payment(_id)
-    elif '3*' in text:
+    elif text == '3' or '3*' in text:
         return menu.payment_sequence(text, _id)
     # ----------------------------------------   
-    elif text == '4': 
-        return menu.my_bank(_id)
-    elif '4*' in text:
-        return menu.banking_sequence(text, _id)
+    elif text == '4' or '4*' in text:
+        return menu.account_balance(text, _id, Accounts, db, phoneNumber)
+    # ----------------------------------------   
+    elif text == '5' or '5*' in text:
+        return menu.pin_change_sequence(text, _id, Accounts, db, phoneNumber)
     # ----------------------------------------   
     else:
         return "END"
+
 
 # creating application port.
 if __name__ == '__main__':
