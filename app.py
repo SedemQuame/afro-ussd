@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from util import generate_random_acc, choose_random_bank_branch
 from session_manager import SessionManager
 from menu import Menu
+import pprint
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///accounts.sqlite3'
@@ -14,35 +15,49 @@ session = SessionManager()
 menu = Menu(session)
 response = ""
 
+
 class Accounts(db.Model):
-   id = db.Column('account_id', db.Integer, primary_key = True)
-   account_number = db.Column(db.String(30)) #program generated
-   bank_branch = db.Column(db.String(50)) # program generated
-   name = db.Column(db.String(50)) # user input
-   pin = db.Column(db.String(6)) # user input
-   phone = db.Column(db.String(15)) # user input or from ussd_session
-   email = db.Column(db.String(100))  # user input
-   balance = db.Column(db.String(200)) # default 0, user input (teller)
-   retry_chances = db.Column(db.Integer) # default 3
-   creation_date = db.Column(db.String(10)) # progam generated
+    id = db.Column('account_id', db.Integer, primary_key=True)
+    name = db.Column(db.String(50))  # user input
+    phone = db.Column(db.String(15))  # user input or from ussd_session
+    email = db.Column(db.String(100))  # user input
+    pin = db.Column(db.String(6))  # user input
+    bank = db.Column(db.String(100)) #user input
+    account_number = db.Column(db.String(30)) #user input
+    bank_branch = db.Column(db.String(50)) #user input
+    balance = db.Column(db.String(200))  # default 0, user input (teller)
+    retry_chances = db.Column(db.Integer)  # default 3
+    creation_date = db.Column(db.String(10))  # progam generated
+
 
 class Transactions(db.Model):
-    id = db.Column('transaction_id', db.Integer, primary_key = True)
+    id = db.Column('transaction_id', db.Integer, primary_key=True)
     sender = db.Column(db.String(50))
     recipient = db.Column(db.String(50))
     amount = db.Column(db.Integer)
     reference = db.Column(db.String(100))
     timestamp = db.Column(db.String(50))
 
-def __init__(self, account_number, phone, balance, bank_branch, name, pin, retry_chances, creation_date):
-   self.account_number = account_number
-   self.phone = phone
-   self.balance = balance
-   self.bank_branch = bank_branch
-   self.name = name
-   self.pin = pin
-   self.retry_chances = retry_chances
-   self.creation_date = creation_date
+
+def __init__(
+        self,
+        account_number,
+        phone,
+        balance,
+        bank_branch,
+        name,
+        pin,
+        retry_chances,
+        creation_date):
+    self.account_number = account_number
+    self.phone = phone
+    self.balance = balance
+    self.bank_branch = bank_branch
+    self.name = name
+    self.pin = pin
+    self.retry_chances = retry_chances
+    self.creation_date = creation_date
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -57,41 +72,52 @@ def sanitize(phone_number):
             phone_number = phone_number.replace('233', '0').replace('+', '')
     return phone_number
 
-@app.route('/new', methods = ['GET', 'POST'])
-def new():
-   if request.method == 'POST':
-      if not request.form['name'] or not request.form['phone'] or not request.form['balance'] or not request.form['pin'] or not request.form['']:
-         flash('Please enter all the fields', 'error')
-      else:
-         default_pin_retry_chances = 3
-         account = Accounts(account_number = generate_random_acc(), phone = sanitize(request.form['phone']),
-            balance = request.form['balance'], bank_branch = choose_random_bank_branch(), name = request.form['name'], pin = request.form['pin'],
-            retry_chances = default_pin_retry_chances, creation_date = '')
-         db.session.add(account)
-         db.session.commit()
-         flash('Record was successfully added')
-         return redirect(url_for('show_all'))
-   return render_template('new.html')
 
-@app.route('/delete', methods = ['POST'])
-def delete():
-   if request.method == 'POST':
-      if not request.form['id']:
-        flash('Please enter all the fields', 'error')
-      else:
-        Accounts.query.filter_by(id=request.form['id']).delete()
+@app.route('/new', methods=['GET', 'POST'])
+def new():
+    default_pin_retry_chances = 3
+    if request.method == 'POST':
+        pprint.pprint(request.form)
+        account = Accounts(
+            name=request.form['name'],
+            phone=sanitize(
+                request.form['phone']),
+            email=request.form['email_address'],
+            pin=request.form['pin'],
+            bank=request.form['bank'],
+            account_number=request.form['account_number'],
+            bank_branch=request.form['bank_branch'],
+            balance=request.form['balance'],
+            retry_chances=default_pin_retry_chances,
+            creation_date='')
+        db.session.add(account)
         db.session.commit()
+        flash('Record was successfully added')
         return redirect(url_for('show_all'))
+    return render_template('new.html')
+
+
+@app.route('/delete', methods=['POST'])
+def delete():
+    if request.method == 'POST':
+        if not request.form['id']:
+            flash('Please enter all the fields', 'error')
+        else:
+            Accounts.query.filter_by(id=request.form['id']).delete()
+            db.session.commit()
+            return redirect(url_for('show_all'))
 
 @app.route('/all')
 def show_all():
-   return render_template('show_all.html', accounts = Accounts.query.all() )
+    return render_template('show_all.html', accounts=Accounts.query.all())
 
-@app.route('/restore', methods = ['POST'])
-def restore_account_chances ():
+
+@app.route('/restore', methods=['POST'])
+def restore_account_chances():
     if request.method == 'POST':
         if request.form['id']:
-            Accounts.query.filter_by(id=request.form['id']).first().retry_chances = 3
+            Accounts.query.filter_by(
+                id=request.form['id']).first().retry_chances = 3
             db.session.commit()
             return redirect(url_for('show_all'))
 
@@ -108,21 +134,21 @@ def ussd_callback():
         return menu.home(_id)
     elif text == '1':
         return menu.transfer(_id)
-    elif '1*' in text:
+    elif '1*' == text[0:2]:
         return menu.transfer_money_sequence(text, _id, Accounts, db, phoneNumber)
     # ----------------------------------------
-    elif text == '2' or '2*' in text:
-        return menu.withdrawal_sequence(text, _id, Accounts, db, phoneNumber)      
-    # ----------------------------------------   
-    elif text == '3' or '3*' in text:
-        return menu.payment_sequence(text, _id)
-    # ----------------------------------------   
-    elif text == '4' or '4*' in text:
+    elif text[0] == '2' or '2*' == text[0:2]:
+        return menu.withdrawal_sequence(text, _id, Accounts, db, phoneNumber)
+    # ----------------------------------------
+    elif text[0] == '3' or '3*' == text[0:2]:
+        return menu.payment_sequence(text, _id, Accounts, db, phoneNumber)
+    # ----------------------------------------
+    elif text[0] == '4' or '4*' == text[0:2]:
         return menu.account_balance(text, _id, Accounts, db, phoneNumber)
-    # ----------------------------------------   
-    elif text == '5' or '5*' in text:
+    # ----------------------------------------
+    elif text[0] == '5' or '5*' == text[0:2]:
         return menu.pin_change_sequence(text, _id, Accounts, db, phoneNumber)
-    # ----------------------------------------   
+    # ----------------------------------------
     else:
         return "END"
 

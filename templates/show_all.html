@@ -32,8 +32,11 @@
         {%- endfor %}
 
         <div class="row">
-            <span class="col-6">User Records</span>
-            <a class="col-6 text-end" href="{{ url_for('new') }}" class="link-primary">Add User</a>
+            <a class="col-6" href="{{ url_for('show_all') }}" class="link-primary">
+                <h1 class="col-6"><b>User Records</b></h1>
+            </a>
+            <br>
+            <a class="col-6 text-end" href="{{ url_for('new') }}" class="link-primary"><h1>Add User</h1></a>
         </div>
 
         <table class="table table-striped">
@@ -43,9 +46,9 @@
                     <th>Account</th>
                     <th>Name</th>
                     <th>Phone</th>
-                    <th>Retry Chances</th>
                     <th>Balance</th>
                     <th>Pin</th>
+                    <th>Retry Chances</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -57,9 +60,9 @@
                     <td>{{ account.account_number }}</td>
                     <td>{{ account.name }}</td>
                     <td>{{ account.phone }}</td>
-                    <td>{{ account.retry_chances }}</td>
                     <td>GHS {{ account.balance }}.00</td>
                     <td> ****** </td> 
+                    <td>{{ account.retry_chances }}</td>
                     <!-- {{ account.pin }} -->
                     <!-- <td>{{ account.creation_date }}</td> -->
                     <td>

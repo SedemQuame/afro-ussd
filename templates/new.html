@@ -24,63 +24,81 @@
         </div>
     </nav>
 
-    <div class="col-12 offset-md-4 col-md-4">
-        <p>Please enter the user's details to register them for the ussd </p>
-
-        {%- for category, message in get_flashed_messages(with_categories = true) %}
-        <div class="alert alert-danger">
-            {{ message }}
+    <div class="col-12 offset-md-1 col-md-10">
+        <div class="row">
+            <a class="col-6" href="{{ url_for('show_all') }}" class="link-primary">
+                <h1 class="col-6"><b>User Records</b></h1>
+            </a>
+            <br>
+            <a class="col-6 text-end" href="{{ url_for('new') }}" class="link-primary"><h1>Add User</h1></a>
         </div>
-        {%- endfor %}
+        <div class="col-12 offset-md-4 col-md-4">
 
-        <form action="{{ request.path }}" method="post">
-            <div class="mb-3">
-                <label for="bank" class="form-label">Bank</label>
-                <!-- <input id="bank" class="form-control" type="text" name="bank" placeholder="Name"/> -->
-                <select id="bank">
-                    <option value="UBA">UBA</option>
-                    <option value="CalBank">CalBank</option>
-                    <option value="EcoBank">EcoBank</option>
-                    <option value="Stanbic">Stanbic</option>
-                    <option value="ADB">ADB</option>
-                </select>
-            </div>
+            <p>Please enter the user's details to register them for the ussd </p>
 
-            <div class="mb-3">
-                <label for="bank_branch" class="form-label">Bank Branch</label>
-                <!-- <input id="bank_branch" class="form-control" type="text" name="bank_branch" placeholder="Bank Branch"/> -->
-                <select id="Branch">
-                    <option value="Madina">Madina</option>
-                    <option value="Kasoa">Kasoa</option>
-                    <option value="Legon">Legon</option>
-                    <option value="Dodowa">Dodowa</option>
-                </select>
+            {%- for category, message in get_flashed_messages(with_categories = true) %}
+            <div class="alert alert-danger">
+                {{ message }}
             </div>
+            {%- endfor %}
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Name</label>
-                <input id="name" class="form-control" type="text" name="name" placeholder="Name"/>
-            </div>
-            
-            <div class="mb-3">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input id="phone" class="form-control" type="text" name="phone" placeholder="Phone Number"/>
-            </div>
-            
-            <div class="mb-3">
-                <label for="PIN" class="form-label">Account P.I.N</label>
-                <input id="PIN" class="form-control" type="text" name="pin" placeholder="Pin"/>
-            </div>
+            <form action="{{ request.path }}" method="post">
+                
+                <b>Personal Details</b>
+                <hr>
 
-            <div class="mb-3">
-                <label for="balance" class="form-label">Initial Deposit</label>
-                <input id="balance" class="form-control" type="text" name="balance" placeholder="Bank Balance"/>
-            </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input id="name" class="form-control" type="text" name="name" placeholder="Name"/>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input id="phone" class="form-control" type="text" name="phone" placeholder="Phone Number"/>
+                </div>
 
-            <div class="d-grid gap-2 d-md-block">
-                <input class="btn btn-dark" type="submit" value="Submit" />
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label for="email_address" class="form-label">Email Address</label>
+                    <input id="email_address" class="form-control" type="text" name="email_address" placeholder="Email Address"/>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="PIN" class="form-label">Account P.I.N</label>
+                    <input id="PIN" class="form-control" type="text" name="pin" placeholder="Pin"/>
+                </div>
+
+                <b>Banking Detials</b>
+                <hr>
+
+                <div class="mb-3">
+                    <label for="bank" class="form-label">Bank</label>
+                    <input id="bank" class="form-control" type="text" name="bank" placeholder="Bank"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="account_number" class="form-label">Account Number</label>
+                    <input id="account_number" class="form-control" type="text" name="account_number" placeholder="Account Number"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="bank_branch" class="form-label">Bank Branch</label>
+                    <input id="bank_branch" class="form-control" type="text" name="bank_branch" placeholder="Bank Branch"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="balance" class="form-label">Initial Deposit</label>
+                    <input id="balance" class="form-control" type="text" name="balance" placeholder="Bank Balance"/>
+                </div>
+
+                <div class="d-grid gap-2 d-md-block">
+                    <input class="btn btn-dark" type="submit" value="Submit" />
+                </div>
+
+                <br>
+                <br>
+                <br>
+            </form>
+        </div>
     </div>
 
 </body>
