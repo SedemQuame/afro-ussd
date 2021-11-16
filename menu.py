@@ -5,8 +5,49 @@ import pprint
 
 # global
 sender = "sedem.amekpewu.3@gmail.com"
-password = "OOKL1neFeLtEr@1"
+password = "__"
 
+def random_otp_generator():
+    import string
+    import random
+    str_len = 6
+    ran = ''.join(
+        random.choices(
+            string.ascii_uppercase +
+            string.digits,
+            k=str_len))
+    return str(ran)
+
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
+def mail_random_string_to_(sender, receiver, password, intent, phone_number):
+    import smtplib
+    # generate random otp and inject into message.
+    random_otp = random_otp_generator()
+    mail_content = f"You are receiving this email because there was a {intent} for you AFROUSSD account.\nEnter this OTP to verify your identity {random_otp}"
+
+    email_text = """\
+    From: %s
+    To: %s
+    Subject: %s
+
+    %s
+    """ % (sender, ", ".join(receiver), intent, mail_content)
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.login(sender, password)
+        server.sendmail(sender, ", ".join(receiver), email_text)
+        server.quit()
+
+        print('Email sent!')
+
+        # store generated random otp, using phone number as key in redis.
+        # use SET to create pair, EXPIRE to delete after X seconds.
+        SessionManager().set_and_expire_keys(phone_number, random_otp)
+    except Exception as exception:
+        print(exception)
 
 class Menu():
     # class attributes
@@ -41,7 +82,7 @@ class Menu():
     def unavailable(self, _id):
         menu_text = "Service Unavailable"
         return self.session.ussd_end(menu_text)
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
     def transfer(self, _id):
         menu_text = "Transfer Money \n"
         menu_text += "1. Vodafone Network\n"
@@ -192,7 +233,7 @@ class Menu():
             phase_str = f"Unknown input, please try again"
             return self.session.ussd_end(phase_str)
         return self.session.ussd_proceed(phase_str, _id, '11')
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
     def withdrawal_sequence(
             self,
             menu_text,
@@ -230,7 +271,7 @@ class Menu():
         else:
             phase_str = f"An error occurred during the money withdrawal process, please try again."
         return self.session.ussd_end(phase_str)
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
     def payment_sequence(
             self,
             menu_text,
@@ -312,7 +353,7 @@ class Menu():
             phase_str = f"Service is currently unavailable."
             return self.session.ussd_end(phase_str)
         return self.session.ussd_proceed(phase_str, _id, '12')
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
     def account_balance(self, text, _id, Accounts, db, sender_phone_number):
         phase_str = ''
         user_account = Accounts.query.filter_by(
@@ -321,7 +362,7 @@ class Menu():
             phase_str += "Account Balance\n"
             phase_str += f"Your account balance is GHS{user_account[0].balance}.00"
         return self.session.ussd_end(phase_str)
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
     def pin_change_sequence(
             self,
             menu_text,
@@ -371,47 +412,7 @@ class Menu():
         else:
             phase_str = "Input is unknown."
             return self.session.ussd_end(phase_str)
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
-def random_otp_generator():
-    import string
-    import random
-    str_len = 6
-    ran = ''.join(
-        random.choices(
-            string.ascii_uppercase +
-            string.digits,
-            k=str_len))
-    return str(ran)
-# --------------------------------------------------------------------------------------------------------------------------------------------------------
-def mail_random_string_to_(sender, receiver, password, intent, phone_number):
-    import smtplib
-    # generate random otp and inject into message.
-    random_otp = random_otp_generator()
-    mail_content = f"You are receiving this email because there was a {intent} for you AFROUSSD account.\nEnter this OTP to verify your identity {random_otp}"
-
-    email_text = """\
-    From: %s
-    To: %s
-    Subject: %s
-
-    %s
-    """ % (sender, ", ".join(receiver), intent, mail_content)
-
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.ehlo()
-        server.starttls()
-        server.login(sender, password)
-        server.sendmail(sender, ", ".join(receiver), email_text)
-        server.quit()
-
-        print('Email sent!')
-
-        # store generated random otp, using phone number as key in redis.
-        # use SET to create pair, EXPIRE to delete after X seconds.
-        SessionManager().set_and_expire_keys(phone_number, random_otp)
-    except Exception as exception:
-        print(exception)
+    # --------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # mail_random_string_to_(sender, ["sedemquame@gmail.com"], password, "PIN Change Request", "0546744163")
 # *384*26678#
