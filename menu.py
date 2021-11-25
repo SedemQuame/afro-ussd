@@ -387,7 +387,7 @@ class Menu():
                 # change account to accept email address.
                 receiver = sender_account[0].email
                 intent = "PIN change request"
-                mail_random_string_to_(sender, receiver, password, intent)
+                mail_random_string_to_(sender, receiver, password, intent, sender_phone_number)
                 phase_str = "Please enter the OTP sent to your email address."
                 return self.session.ussd_proceed(phase_str, _id, '')
             else:

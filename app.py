@@ -18,6 +18,8 @@ response = ""
 
 class Accounts(db.Model):
     id = db.Column('account_id', db.Integer, primary_key=True)
+    id_type = db.Column(db.String(30))
+    national_id_number = db.Column(db.String(20))
     name = db.Column(db.String(50))  # user input
     phone = db.Column(db.String(15))  # user input or from ussd_session
     email = db.Column(db.String(100))  # user input
@@ -76,13 +78,26 @@ def sanitize(phone_number):
 @app.route('/new', methods=['GET', 'POST'])
 def new():
     default_pin_retry_chances = 3
+    # check if pin is alphanumberic contains numbers and letters.
+    # check if pin has length greater than or equal to 6
+
     if request.method == 'POST':
+        # if len(request.form['pin']) != 6:
+        #     flash('Account PIN must be of length 6.')
+        #     return redirect(url_for('new'))
+
+        # if not (request.form['pin']).isalpha():
+        #     flash('Account PIN must be alpha numeric.')
+        #     return redirect(url_for('new'))
+            
         pprint.pprint(request.form)
         account = Accounts(
             name=request.form['name'],
             phone=sanitize(
                 request.form['phone']),
             email=request.form['email_address'],
+            id_type=request.form['id_type'],
+            national_id_number=request.form['national_id_number'],
             pin=request.form['pin'],
             bank=request.form['bank'],
             account_number=request.form['account_number'],
